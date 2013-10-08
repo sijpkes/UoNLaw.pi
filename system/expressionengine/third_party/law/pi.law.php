@@ -20,7 +20,7 @@ class Law {
 	private $save_message = "";
 	private $member_group_id = 0;
 	private $member_access_group_id = 0;
-	private $access_key = "l4wsA00S";
+	private $access_key = ""; // set password here
 	private $access_uri = "";
 	private $home_link = "<p class='home'><a href=\"/index.php/law/console\">Home</a></p>";
 	
