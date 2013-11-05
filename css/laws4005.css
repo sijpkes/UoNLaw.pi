@@ -1,0 +1,52 @@
+body {
+  border: thin solid black;
+  font-family: verdana,arial,sans-serif;
+  margin: 6em auto 0;
+  padding: 1em;
+  width: 640px;
+}
+h1:nth-of-type(1) {
+  background: none repeat scroll 0 0 #CC0000;
+  color: #FFFFFF;
+  display: block;
+  padding: 1em;
+}
+h1:nth-of-type(2) {
+  background-color: black;
+  color: white;
+  font-size: 15pt;
+  margin-top: -20px;
+  padding: 1em;
+}
+input {
+  padding: 12px;
+}
+p.home {
+  display: block;
+  margin-bottom: 2em;
+}
+p.home > a {
+	float: right;
+}
+table input {
+	padding: 0;
+}
+table td {
+  border: thin solid black;
+  padding: 0.5em;
+}
+p#student-no {
+  background: none repeat scroll 0 0 #555555;
+  color: white;
+  margin-top: -11px;
+  padding: 1em;
+  display: block;
+}
+div:last-of-type {
+	display: none;
+}
+.focusUser { border: 2px solid red; }
+.errormsg { font-style: bolder; color: red; }
+.okmsg { font-style: bolder; color: green; }
+.savemsg { font-style: bolder; color: orange; }
+.saveErrorMsg { font-style: bolder; color: red; }
