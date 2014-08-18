@@ -1,5 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+/*
+ * IÕm pleased to hear it. If anyone asks you how the software differs from SPARK, the main differences are:
+-        students donÕt evaluate themselves, only the other members of their group.
+-        Students canÕt give every other student in their group the same mark (or at least they wonÕt be able 
+ * 		to if you set it up in a way which prevents them from giving any two members the same number of points).
+ * 
+ * 
+ */
 $plugin_info = array(
     'pi_name'         => 'Pool grouped assessment plugin',
     'pi_version'      => '1.0',
@@ -428,110 +435,12 @@ mysql;
 	}
 	
 	protected static function outputJavascript() {
-		$str = <<<schmoodle
-		<script type="text/javascript">
-		\$(document).ready(function() {
-			\$(".student_assess").last().closest('tr').after("<tr class='okmsg'><td colspan='3'>You have 100 points to distribute.</td>");	
-			
-		\$("button#assess").attr('disabled','disabled');
-		var getTotal = function() {
-			var total = 0;
-			\$(".student_assess").removeClass('focusUser');
-			\$(".student_assess").each(function(i,o) {
-				if(isNaN($(o).val())) {
-					\$(this).addClass('focusUser');
-					return false;
-				}
-				total += Number(\$(o).val());
-				if(total > 100) {
-					\$(this).addClass('focusUser');
-				}
-			});
-			return total;
-		}
-		\$(document).on('keyup', ".student_assess", function() {
-				\$(".errormsg,.okmsg").remove();
-				var total = getTotal();
-				if(!total) {
-					\$(".student_assess").last().closest('tr').after("<tr class='errormsg'><td colspan='3'>You can only enter numeric values for the score.</td>");
-					\$("button#assess").attr('disabled','disabled');
-					return false;
-				}
-				
-				var diff = Math.abs(100 - total);
-				if(total > 100) {
-					\$(".student_assess").last().closest('tr').after("<tr class='errormsg'><td colspan='3'>You've given out "+ diff +" too many points, please amend.</td>");
-					\$("button#assess").attr('disabled','disabled');
-				} else if(total < 100) {
-					\$(".student_assess").last().closest('tr').after("<tr class='okmsg'><td colspan='3'>You've got "+ diff +" points left, please distribute them.</td>");
-					\$("button#assess").attr('disabled','disabled');
-				} else if(total == 100) {
-					\$(".student_assess").last().closest('tr').after("<tr class='okmsg'><td colspan='3'>You've distributed all 100 points.</td>");
-					\$("button#assess").removeAttr('disabled');
-				} else {
-				    \$("button#assess").attr('disabled','disabled');
-				}
-		});
+		ob_start();
+			include("main.js");
+		$str = ob_get_contents();
+		ob_end_clean();
 		
-		\$('.student_assess').keyup(function () { 
-			this.value = this.value.replace(/[^0-9]/g,'');
-		});
-			
-		\$("button#Save").click(function() {
-			\$("input[name='locked']").val('0');
-			\$("form#assessments").submit();
-		});
-		
-		\$("button#assess").click(function(e) {
-			e.preventDefault();
-	
-			var formok = true;
-			var confirmed = false;
-			\$("input[type='text']").each(function() {
-				var me = this;
-				\$(me).css('border', 'none');
-				if(isNaN(\$(this).val())) {
-					\$(me).css('border', '2px solid red');
-					formok = false;
-				}
-			});
-			
-			\$(".comment").each(function() {
-				var me = this;
-				\$(me).css('border', 'none');
-				if(\$(this).val().length == 0) {
-					\$(me).css('border', '2px solid red');
-					formok = false;
-				}
-			});
-			
-			var total = getTotal();
-			if(total > 100 || total < 100) {
-				\$(".student_assess").last().closest('tr').after("<tr class='errormsg'><td colspan='3'>Please ensure that your scores add up to 100.</td>");
-				\$("button#assess").attr('disabled','disabled');
-			}
-			
-			if(formok === true) {
-				confirmed = confirm("Once you have submitted you will not be able to return to this form to amend your marks.  Are you sure?");
-				if(confirmed){ 
-						\$("input[name='locked']").val('1');
-						\$("form#assessments").submit();
-				}
-			} else {
-				alert("Please fill in all the comment fields and ensure you only enter numeric values for the score.");
-			}  
-		});
-		
-		\$(".savemsg, .saveErrorMsg").fadeIn(200).fadeOut(200).fadeIn(200).delay(10000).fadeOut(200);
-		
-		// trigger total message
-		\$('.student_assess').first().trigger('keyup');
-		
-		});
-		</script>
-schmoodle;
-		
-		return $str;
+		return "<script>$str</script>";
 	}
 	
 	 public static function usage()
